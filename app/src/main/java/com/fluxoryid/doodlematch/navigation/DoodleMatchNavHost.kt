@@ -6,11 +6,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.fluxoryid.doodlematch.domain.DoodleCatalog
 import com.fluxoryid.doodlematch.ui.screens.DrawScreen
 import com.fluxoryid.doodlematch.ui.screens.HomeScreen
 import com.fluxoryid.doodlematch.ui.screens.PlaceholderScreen
 import com.fluxoryid.doodlematch.ui.screens.PlayMode
+import com.fluxoryid.doodlematch.ui.screens.match.MatchScreen
 
 private object Routes {
     const val HOME = "home"
@@ -54,10 +54,11 @@ fun DoodleMatchNavHost() {
             arguments = listOf(navArgument("categoryId") { type = NavType.StringType })
         ) { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId").orEmpty()
-            PlaceholderScreen(
-                title = "Match · ${DoodleCatalog.categoryTitle(categoryId)}",
-                subtitle = "Memory cards will use saved child drawings in the next phase.",
-                onBack = { navController.popBackStack() }
+            MatchScreen(
+                categoryId = categoryId,
+                onBack = { navController.popBackStack() },
+                onGoToDraw = { navController.navigate("draw/$categoryId") },
+                onOpenStickers = { navController.navigate(Routes.STICKERS) }
             )
         }
 

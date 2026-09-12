@@ -58,6 +58,11 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-compose:1.9.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.5")
+    // Phase 3: added for MatchViewModel (viewModelScope + the Compose viewModel()/viewModelFactory
+    // helpers) — Match is the first screen in this project with state complex enough to warrant
+    // a ViewModel rather than remember{} in the composable.
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.foundation:foundation")
