@@ -8,9 +8,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.fluxoryid.doodlematch.ui.screens.DrawScreen
 import com.fluxoryid.doodlematch.ui.screens.HomeScreen
-import com.fluxoryid.doodlematch.ui.screens.PlaceholderScreen
 import com.fluxoryid.doodlematch.ui.screens.PlayMode
 import com.fluxoryid.doodlematch.ui.screens.match.MatchScreen
+import com.fluxoryid.doodlematch.ui.screens.parent.ParentZoneScreen
+import com.fluxoryid.doodlematch.ui.screens.stickers.StickersScreen
 
 private object Routes {
     const val HOME = "home"
@@ -34,7 +35,8 @@ fun DoodleMatchNavHost() {
                     }
                     navController.navigate(route)
                 },
-                onParentZone = { navController.navigate(Routes.PARENT) }
+                onStickers = { navController.navigate(Routes.STICKERS) },
+                onParentZone = { navController.navigate(Routes.PARENT) },
             )
         }
 
@@ -63,19 +65,11 @@ fun DoodleMatchNavHost() {
         }
 
         composable(Routes.STICKERS) {
-            PlaceholderScreen(
-                title = "Stickers",
-                subtitle = "Rewards and sticker collection arrive after Match gameplay.",
-                onBack = { navController.popBackStack() }
-            )
+            StickersScreen(onBack = { navController.popBackStack() })
         }
 
         composable(Routes.PARENT) {
-            PlaceholderScreen(
-                title = "Parent Zone",
-                subtitle = "Progress insights and parent controls arrive after the core play loop.",
-                onBack = { navController.popBackStack() }
-            )
+            ParentZoneScreen(onBack = { navController.popBackStack() })
         }
     }
 }
