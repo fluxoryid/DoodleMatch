@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,10 +40,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.Image
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.fluxoryid.doodlematch.data.drawing.FileDrawingAvailabilityRepository
 import com.fluxoryid.doodlematch.data.progress.FileMatchProgressStore
 import com.fluxoryid.doodlematch.domain.DoodleCatalog
@@ -244,8 +245,6 @@ private fun MatchGrid(
                         modifier = Modifier.weight(1f).fillMaxSize(),
                     )
                 }
-                // Odd card count (fewer than 5 completed objects -> an odd total is impossible
-                // since cards always come in pairs, but guard the row anyway for symmetry).
                 if (rowCards.size == 1) Spacer(modifier = Modifier.weight(1f))
             }
         }
@@ -358,7 +357,7 @@ private fun CompletionOverlay(
         modifier = Modifier
             .fillMaxSize()
             .background(Navy.copy(alpha = 0.35f))
-            .clickable(enabled = false) {}, // swallow taps to the board behind the overlay
+            .clickable(enabled = false) {},
         contentAlignment = Alignment.Center,
     ) {
         Card(
@@ -430,7 +429,6 @@ private fun CompletionOverlay(
     }
 }
 
-/** Never a raw numeric score — always one of a small set of encouraging phrases. */
 private fun completionHeadline(accuracyPercent: Int): String = when {
     accuracyPercent >= 90 -> "Amazing matching!"
     accuracyPercent >= 70 -> "Great memory!"
