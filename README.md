@@ -9,20 +9,31 @@ DoodleMatch is an Android drawing-to-memory-card game for children ages 4–9. A
 - Home mode selector: Draw / Match
 - Categories: Animals, Dinosaurs, Vehicles, Fruits, Space, ABC & Numbers
 - Category taps are ignored until a mode is selected
-- Locked categories are modeled explicitly and remain non-interactive
 - Parent Zone: long-press the small Home control for about 1 second
 - Navigation: Home → Draw/Match(categoryId) → Stickers / Parent Zone
 
-## Phase 1
-This repository contains the first runnable application scaffold: theme, navigation, responsive Home screen, category model, placeholder Draw/Match/Stickers/Parent Zone screens, and CI build workflow.
+## Phase 1 — foundation
+- App theme and navigation
+- Responsive Home screen
+- Six-category model
+- Parent Zone gesture
+- Android CI workflow
 
-## Phase 2
-- Five objects per category
-- Trace-guide artwork
-- Drawing canvas and persistence
-- Use child drawings as memory-card faces
-- Stickers/reward loop
-- Parent progress reporting
+## Phase 2 — drawing workflow
+- Five drawable objects per category
+- Object selector
+- Touch drawing canvas
+- Semi-transparent trace guide placeholder
+- Five-color brush palette
+- Thin/thick brush controls
+- Undo and clear
+- Per-object local persistence under app-private storage
+- Saved drawings reload automatically when an object is revisited
+
+The final Canva artwork will replace the current emoji/letter trace-guide placeholders without changing the persistence model.
+
+## Next phase
+Build Match gameplay using saved child drawings as one side of each memory pair, then add scoring, stickers, and Parent Zone progress reporting.
 
 ## Toolchain
 - Android Studio Koala or newer

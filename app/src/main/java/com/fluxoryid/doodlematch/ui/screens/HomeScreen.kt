@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -30,9 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.awaitFirstDown
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.waitForUpOrCancellation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -241,11 +238,26 @@ private fun ParentZoneLongPressControl(onLongPress: () -> Unit) {
             .background(SkyBlue.copy(alpha = 0.22f), RoundedCornerShape(12.dp))
             .pointerInput(Unit) {
                 awaitEachGesture {
-                    awaitFirstDown(requireUnconsumed = false)
+                    val firstEvent = awaitPointerEvent()
+                    if (firstEvent.changes.none { it.pressed }) return@awaitEachGesture
+
                     val releasedBeforeThreshold = withTimeoutOrNull(1_000L) {
-                        waitForUpOrCancellation()
+                        var stillPressed: Boolean
+                        do {
+                            val event = awaitPointerEvent()
+                            stillPressed = event.changes.any { it.pressed }
+                        } while (stillPressed)
+                        true
                     }
-                    if (releasedBeforeThreshold == null) onLongPress()
+
+                    if (releasedBeforeThreshold == null) {
+                        onLongPress()
+                        var stillPressed: Boolean
+                        do {
+                            val event = awaitPointerEvent()
+                            stillPressed = event.changes.any { it.pressed }
+                        } while (stillPressed)
+                    }
                 }
             },
         contentAlignment = Alignment.Center

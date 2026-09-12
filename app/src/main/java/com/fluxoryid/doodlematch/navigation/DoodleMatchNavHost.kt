@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.fluxoryid.doodlematch.domain.DoodleCatalog
+import com.fluxoryid.doodlematch.ui.screens.DrawScreen
 import com.fluxoryid.doodlematch.ui.screens.HomeScreen
 import com.fluxoryid.doodlematch.ui.screens.PlaceholderScreen
 import com.fluxoryid.doodlematch.ui.screens.PlayMode
@@ -41,9 +43,8 @@ fun DoodleMatchNavHost() {
             arguments = listOf(navArgument("categoryId") { type = NavType.StringType })
         ) { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId").orEmpty()
-            PlaceholderScreen(
-                title = "Draw",
-                subtitle = "Category: ${categoryId.toDisplayName()}\nDrawing canvas arrives in Phase 2.",
+            DrawScreen(
+                categoryId = categoryId,
                 onBack = { navController.popBackStack() }
             )
         }
@@ -54,8 +55,8 @@ fun DoodleMatchNavHost() {
         ) { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId").orEmpty()
             PlaceholderScreen(
-                title = "Match",
-                subtitle = "Category: ${categoryId.toDisplayName()}\nMemory cards arrive in Phase 2.",
+                title = "Match · ${DoodleCatalog.categoryTitle(categoryId)}",
+                subtitle = "Memory cards will use saved child drawings in the next phase.",
                 onBack = { navController.popBackStack() }
             )
         }
@@ -63,7 +64,7 @@ fun DoodleMatchNavHost() {
         composable(Routes.STICKERS) {
             PlaceholderScreen(
                 title = "Stickers",
-                subtitle = "Rewards and sticker collection arrive in Phase 2.",
+                subtitle = "Rewards and sticker collection arrive after Match gameplay.",
                 onBack = { navController.popBackStack() }
             )
         }
@@ -71,19 +72,9 @@ fun DoodleMatchNavHost() {
         composable(Routes.PARENT) {
             PlaceholderScreen(
                 title = "Parent Zone",
-                subtitle = "Progress insights and parent controls arrive in Phase 2.",
+                subtitle = "Progress insights and parent controls arrive after the core play loop.",
                 onBack = { navController.popBackStack() }
             )
         }
     }
-}
-
-private fun String.toDisplayName(): String = when (this) {
-    "animals" -> "Animals"
-    "dinosaurs" -> "Dinosaurs"
-    "vehicles" -> "Vehicles"
-    "fruits" -> "Fruits"
-    "space" -> "Space"
-    "abc_numbers" -> "ABC & Numbers"
-    else -> replace('_', ' ').replaceFirstChar { it.uppercase() }
 }
