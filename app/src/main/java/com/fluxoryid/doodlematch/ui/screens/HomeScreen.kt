@@ -65,6 +65,7 @@ private val categories = listOf(
 @Composable
 fun HomeScreen(
     onCategorySelected: (categoryId: String, mode: PlayMode) -> Unit,
+    onStickers: () -> Unit,
     onParentZone: () -> Unit
 ) {
     var selectedMode by remember { mutableStateOf<PlayMode?>(null) }
@@ -92,7 +93,13 @@ fun HomeScreen(
                     fontSize = 13.sp
                 )
             }
-            ParentZoneLongPressControl(onLongPress = onParentZone)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                StickerShortcut(onClick = onStickers)
+                ParentZoneLongPressControl(onLongPress = onParentZone)
+            }
         }
 
         Spacer(Modifier.height(10.dp))
@@ -227,6 +234,19 @@ private fun CategoryCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun StickerShortcut(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(36.dp)
+            .background(Sunshine.copy(alpha = 0.34f), RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text("⭐", fontSize = 18.sp)
     }
 }
 
