@@ -1,5 +1,6 @@
 package com.fluxoryid.doodlematch.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -30,10 +31,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fluxoryid.doodlematch.domain.assets.ProductionAssetCatalog
+import com.fluxoryid.doodlematch.ui.assets.DrawableAssetResolver
 import com.fluxoryid.doodlematch.ui.theme.Coral
 import com.fluxoryid.doodlematch.ui.theme.Lavender
 import com.fluxoryid.doodlematch.ui.theme.Mint
@@ -181,7 +189,7 @@ private fun ModeButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier.height(46.dp),
+        modifier = modifier.height(48.dp),
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = if (selected) SkyBlue.copy(alpha = 0.30f) else MaterialTheme.colorScheme.surface,
@@ -199,6 +207,12 @@ private fun CategoryCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val coverAssetName = ProductionAssetCatalog.category(category.id)?.coverAssetName
+    val coverResourceId = remember(context, coverAssetName) {
+        coverAssetName?.let { DrawableAssetResolver.resolve(context, it) }
+    }
+
     Card(
         modifier = modifier.clickable(enabled = enabled, onClick = onClick),
         shape = RoundedCornerShape(22.dp),
@@ -215,12 +229,23 @@ private fun CategoryCard(
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = category.symbol,
-                    fontSize = if (category.id == "abc_numbers") 24.sp else 34.sp,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 25.sp
-                )
+                if (coverResourceId != null) {
+                    Image(
+                        painter = painterResource(coverResourceId),
+                        contentDescription = "${category.title} category artwork",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                } else {
+                    Text(
+                        text = category.symbol,
+                        fontSize = if (category.id == "abc_numbers") 24.sp else 34.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 25.sp
+                    )
+                }
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = category.title,
@@ -241,12 +266,13 @@ private fun CategoryCard(
 private fun StickerShortcut(onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .size(36.dp)
-            .background(Sunshine.copy(alpha = 0.34f), RoundedCornerShape(12.dp))
+            .size(48.dp)
+            .semantics { contentDescription = "Sticker Book" }
+            .background(Sunshine.copy(alpha = 0.34f), RoundedCornerShape(14.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Text("⭐", fontSize = 18.sp)
+        Text("⭐", fontSize = 20.sp)
     }
 }
 
@@ -254,8 +280,9 @@ private fun StickerShortcut(onClick: () -> Unit) {
 private fun ParentZoneLongPressControl(onLongPress: () -> Unit) {
     Box(
         modifier = Modifier
-            .size(36.dp)
-            .background(SkyBlue.copy(alpha = 0.22f), RoundedCornerShape(12.dp))
+            .size(48.dp)
+            .semantics { contentDescription = "Parent Zone. Press and hold to open." }
+            .background(SkyBlue.copy(alpha = 0.22f), RoundedCornerShape(14.dp))
             .pointerInput(Unit) {
                 awaitEachGesture {
                     val firstEvent = awaitPointerEvent()
